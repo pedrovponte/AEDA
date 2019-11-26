@@ -6,32 +6,33 @@
 
 using namespace std;
 
+//a fornecer
 BST<PalavraSignificado> Dicionario::getPalavras() const {
 	return palavras;
 }
 
-//a alterar
 bool PalavraSignificado::operator < (const PalavraSignificado &ps1) const {
      return palavra < ps1.palavra;
 }
 
 bool PalavraSignificado::operator == (const PalavraSignificado &ps1) const {
-    return palavra == ps1.palavra;
+     return palavra == ps1.palavra;
 }
 
-//a alterar
+
 void Dicionario::lerDicionario(ifstream &fich)
 {
-     string pal, sig;
-     while(!fich.eof()){
-         getline(fich, pal);
-         getline(fich, sig);
-         PalavraSignificado p1(pal, sig);
-         palavras.insert(p1);
+     string pal,sig;
+     while (!fich.eof())
+     {
+           getline(fich,pal);
+           getline(fich,sig);
+           PalavraSignificado p1(pal,sig);
+           palavras.insert(p1);
      }
 }
 
-//a alterar
+
 string Dicionario::consulta(string palavra) const
 {
     PalavraSignificado p1(palavra,"");
@@ -59,19 +60,36 @@ string Dicionario::consulta(string palavra) const
         return px.getSignificado();
 }
 
-//a alterar
 bool Dicionario::corrige(string palavra, string significado)
 {
-    return 0;
+    PalavraSignificado pDic = palavras.find(PalavraSignificado(palavra,""));
+    if (pDic==PalavraSignificado("","")) {
+        palavras.insert(PalavraSignificado(palavra,significado));
+        return false;
+    }
+    else {
+        palavras.remove(PalavraSignificado(palavra,""));
+        pDic.setSignificado(significado);
+        palavras.insert(pDic);
+        return true;
+    }
+
 }
 
-//a alterar
 void Dicionario::imprime() const
 {
     BSTItrIn<PalavraSignificado> it(palavras);
-    while(!it.isAtEnd()){
+    while (!it.isAtEnd())
+    {
         cout << it.retrieve().getPalavra() << endl << it.retrieve().getSignificado() << endl;
         it.advance();
     }
+    cout << "novo iterador"<< endl;
+    iteratorBST<PalavraSignificado> it2 = palavras.begin();
+     while (it2!=palavras.end()) {
+         cout << (*it2).getPalavra() << endl << (*it2).getSignificado() << endl;
+         it2++;
+     }
+
 }
 
